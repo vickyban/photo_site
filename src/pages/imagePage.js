@@ -38,8 +38,8 @@ class ImagePage extends Component {
           <Image id={this.state.id} />
           <Description id={this.state.id} desc={desc} />
           {comments.map(comment =>
-            <div key={comment.name}>
-              {comment.name}
+            <div className="comment" key={comment.name}>
+              {comment.name}:&nbsp;
               {comment.comment}
             </div>)
           }

@@ -2,9 +2,16 @@
 $font-stack:    Helvetica, sans-serif;
 
 // Colors:
+$black: #201921;
+$dark-gray: #41355D;
+$light-gray: #676D8B;
+$light-blue: #9EBDAB;
+$white: #F3EEE0;
+
 $border-color: #888888;
-$header-color: #0f0f0f;
+$header-color: $black;
 $header-text-color: #f6f6f6;
+
 
 html {
   height: 100%;
@@ -17,9 +24,10 @@ body {
 
 img {
   display: block;
-  max-height: 1000px;
+  max-height: 50vh;
   width: auto;
   height: auto;
+  padding: 15px;
   border: 1px solid $border-color;
 }
 
@@ -76,4 +84,10 @@ footer {
   display: flex;
   justify-content: center;
   padding: 25px;
+}
+
+.comment {
+  padding: 15px;
+  border: 1px solid $border-color;
+  margin-bottom: 5px;
 }
