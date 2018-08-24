@@ -1,7 +1,34 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Image from 'components/imagePage/imageComponent.js';
+import Imgur from 'lib/imgur.js'
 
 class HomePage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      photos: []
+    }
+    this.fetchPhotos();
+  }
+
+  fetchPhotos() {
+    Imgur.fetchMainGallery()
+      .then(photoList => this.setState({ photos: photoList }))
+  }
+
+  displayPhotos() {
+    const photoList = this.state.photos;
+    if (photoList.length > 0) {
+      let photoDivs = photoList.map(photo => {
+        return <div className='photo_div'>
+          <Image id={photo.id}></Image>
+        </div>
+      })
+      return photoDivs;
+    }
+  }
+
   render() {
     return (
       <div>
@@ -9,6 +36,7 @@ class HomePage extends Component {
           <h1>Hello! Welcome to the future photo site</h1>
           <h2>Made by Faizan and Vicky</h2>
           <Link to="/image/DApaUl0">Here&#39;s an image.</Link>
+          {this.displayPhotos()}
         </div>
       </div>
     )
