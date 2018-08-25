@@ -16,11 +16,11 @@ class Imgur {
 
     let jsonObj = await fetch(request).then(res => res.json())
 
-    return this.getPhotos(jsonObj.data)
+    return this.formatPhotos(jsonObj.data)
   }
 
-  getPhotos(data) {
-    return data.map(item => ({
+  formatPhotos(rawPhotos) {
+    return rawPhotos.map(item => ({
       id: item.id,
       title: item.title,
       desc: item.description,
@@ -29,6 +29,37 @@ class Imgur {
       downs: item.downs,
       datetime: item.datetime,
     }))
+  }
+
+  async fetchImageComment(post_id, sort = 'best') {
+    const uri = `https://api.imgur.com/3/gallery/${post_id}/comments/${sort}`;
+    let header = new Headers();
+    header.append("Authorization", `Client-ID ${CLIENT_ID}`);
+    let request = new Request(uri, { meathod: "GET", headers: header });
+
+    let jsonObj = await fetch(request).then(res => res.json());
+
+    let formattedComments = jsonObj.data.map(rawComment => this.formatComment(rawComment))
+    return formattedComments;
+  }
+
+  formatComment(cmt) {
+    let formattedComment = {
+      id: cmt.id,
+      comment: cmt.comment,
+      author: cmt.author,
+      ups: cmt.up,
+      downs: cmt.downs,
+      datetime: cmt.datetime,
+      chidren: []
+    };
+    if (cmt.chidren.length == 0)
+      return formattedComment;
+    else {
+      let children = cmt.chidren.map(child => this.formatComment(child))
+      formattedComment.chidren = children;
+      return formattedComment
+    }
   }
 
 }

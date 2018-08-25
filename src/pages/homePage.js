@@ -13,7 +13,8 @@ class HomePage extends Component {
   }
 
   fetchPhotos() {
-    Imgur.fetchMainGallery()
+    const imgur = new Imgur();
+    imgur.fetchMainGallery()
       .then(photoList => this.setState({ photos: photoList }))
   }
 
@@ -22,7 +23,9 @@ class HomePage extends Component {
     if (photoList.length > 0) {
       let photoDivs = photoList.map(photo => {
         return <div className='photo_div'>
-          <Image id={photo.id}></Image>
+          <Link to={"/image/" + photo.id}>
+            <Image id={photo.id}></Image>
+          </Link>
         </div>
       })
       return photoDivs;
