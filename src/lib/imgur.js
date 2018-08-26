@@ -16,19 +16,37 @@ class Imgur {
 
     let jsonObj = await fetch(request).then(res => res.json())
 
-    return this.formatPhotos(jsonObj.data)
+    let formattedAlbums = jsonObj.data.map(data => this.formatAlbum(data))
+    return formattedAlbums;
   }
 
-  formatPhotos(rawPhotos) {
-    return rawPhotos.map(item => ({
-      id: item.id,
-      title: item.title,
-      desc: item.description,
-      link: item.link,
-      ups: item.ups,
-      downs: item.downs,
-      datetime: item.datetime,
-    }))
+  formatAlbum(data) {
+    let formattedAlbum = {
+      id: data.id,
+      title: data.title,
+      author: data.account_url,
+      commentCount: data.comment_count,
+      ups: data.ups,
+      downs: data.downs,
+      datetime: data.datetime,
+    }
+    if (data.is_album) {
+      formattedAlbum.images = data.images.map(image => this.formatImage(image))
+    } else {
+      formattedAlbum.images = [this.formatImage(data)]
+    }
+    return formattedAlbum
+  }
+
+  formatImage(image) {
+    return {
+      id: image.id,
+      desc: image.description,
+      type: image.type,
+      link: image.link,
+      height: image.height,
+      width: image.width
+    }
   }
 
   async fetchImageComment(post_id, sort = 'best') {
@@ -51,12 +69,12 @@ class Imgur {
       ups: cmt.up,
       downs: cmt.downs,
       datetime: cmt.datetime,
-      chidren: []
+      children: []
     };
-    if (cmt.chidren.length == 0)
+    if (cmt.children.length === 0)
       return formattedComment;
     else {
-      let children = cmt.chidren.map(child => this.formatComment(child))
+      let children = cmt.children.map(child => this.formatComment(child))
       formattedComment.chidren = children;
       return formattedComment
     }

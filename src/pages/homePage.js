@@ -7,28 +7,28 @@ class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      photos: []
+      albums: []
     }
-    this.fetchPhotos();
+    this.fetchMainGallery();
   }
 
-  fetchPhotos() {
+  fetchMainGallery() {
     const imgur = new Imgur();
     imgur.fetchMainGallery()
-      .then(photoList => this.setState({ photos: photoList }))
+      .then(albums => this.setState({ albums: albums }))
   }
 
-  displayPhotos() {
-    const photoList = this.state.photos;
-    if (photoList.length > 0) {
-      let photoDivs = photoList.map(photo => {
-        return <div className='photo_div'>
-          <Link to={"/image/" + photo.id}>
-            <Image id={photo.id}></Image>
+  displayAlbums() {
+    const albums = this.state.albums;
+    if (albums.length > 0) {
+      let albumDivs = albums.map(album => {
+        return <div className='album_div' key={album.id} >
+          <Link to={"/image/" + album.id}>
+            <Image id={album.images[0].id}></Image>
           </Link>
         </div>
       })
-      return photoDivs;
+      return albumDivs;
     }
   }
 
@@ -39,7 +39,7 @@ class HomePage extends Component {
           <h1>Hello! Welcome to the future photo site</h1>
           <h2>Made by Faizan and Vicky</h2>
           <Link to="/image/DApaUl0">Here&#39;s an image.</Link>
-          {this.displayPhotos()}
+          {this.displayAlbums()}
         </div>
       </div>
     )
